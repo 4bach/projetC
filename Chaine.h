@@ -27,5 +27,11 @@ void ecrireChaineTxt(Chaines *C, FILE *f);
 void afficheChaineSVG(Chaines *C, char* nomInstance);
 double longueurTotale(Chaines *C);
 int comptePointsTotal(Chaines *C);
+CellPoint *creerCellPoint( int x, int y );
+CellChaine *creerCellChaine( int numero );
+Chaines* creerChaines( int gamma, int NbChaines );
+void detruireListeCellPoint( CellPoint* cpts );
+void detruireListeCellChaine( CellChaine* cpts );
+void detruireChaines( Chaines* cpts );
 
 #endif	

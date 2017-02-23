@@ -3,29 +3,27 @@
 #include <string.h>
 #include "Chaine.h"
 
-void menu(){
+void menu()
+{
 	
-	
 	printf("1: LECTURE DU FICHIER\n");
-	printf("1: LECTURE DU FICHIER\n");
-	printf("1: LECTURE DU FICHIER\n");
-	printf("1: LECTURE DU FICHIER\n");
-	printf("1: LECTURE DU FICHIER\n");
-	
 }
 
 
 
-int main(int argc, char* *argv){
+int main(int argc, char* *argv)
+{
+
 	int ch;
-	char* nomfic=strdup(argv[1]);
-	if(argc!=3)
-		return 1;
-	FILE* f=fopen(nomfic,"r");
-	if(f==NULL){
+	char* nomfic = strdup(argv[1]);
+
+	FILE* f = fopen(nomfic,"r");
+
+	if(f == NULL){
 		printf("Le fichier n'a pas pu être ouvrir\n");
 		return 2;
 	}
+
 	do{
 
 		menu();
@@ -38,13 +36,7 @@ int main(int argc, char* *argv){
 				printf("Lecture\n");
 				
 				break;
-
-
-
 		}
-
-
-
 
 	}while(ch!=0);
 
