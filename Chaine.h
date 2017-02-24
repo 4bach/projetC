@@ -34,5 +34,8 @@ void detruireListeCellPoint( CellPoint* cpts );
 void detruireListeCellChaine( CellChaine* cpts );
 void detruireChaines( Chaines* cpts );
 void afficheChaineSVG( Chaines *C, char* nomInstance ) ;
+void min_max(Chaines* C,double* minx,double* miny,double* maxx,double* maxy);
+double longueurChaine(CellChaine* C);
+int comptepoints(CellChaine* C);
 
 #endif	

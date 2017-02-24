@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "Chaine.h"
 #include "entree_sortie.h"
 #include "SVGwriter.h"
+
 #define TMAX 50
 
 CellPoint* creerCellPoint( double x, double y ) 
@@ -98,8 +100,7 @@ void lectureChaine( FILE *f , Chaines* chaines )
 			printf("Erreur lors de l'ouverture du fichier.\n");
 			return;
 		}
-		fprintf(stderr, "2\n" );
-
+	
 		GetChaine( f, TMAX, tempo );
 		Skip( f );
 		nbchain = GetEntier( f );
@@ -140,19 +141,31 @@ void lectureChaine( FILE *f , Chaines* chaines )
 			}
 		}	
 }
-
+int comptepoints(CellChaine* C){
+	int cpt=0;
+	if(C==NULL){
+		return 0;
+	}
+	CellPoint* cpoint=C->points;
+	
+	while(cpoint){
+		cpt++;
+		cpoint=cpoint->suiv;
+	}
+	return cpt;
+}
 
 
 void ecrireChaineTxt(Chaines* C,FILE *f1){
 	
 	CellChaine* courant=C->chaines;
-	
-	
+	CellPoint* cpoint=NULL;
+	int cpt;
 	char str[10]="";
-	fprintf(f1,"NbChain:");
+	fprintf(f1,"NbChain: ");
 	sprintf(str,"%d",C->nbChaines);
 	fprintf(f1,"%s\n",str);
-	fprintf(f1,"Gamma:");
+	fprintf(f1,"Gamma: ");
 	sprintf(str,"%d",C->gamma);
 	fprintf(f1,"%s\n\n",str);
 	
@@ -160,12 +173,16 @@ void ecrireChaineTxt(Chaines* C,FILE *f1){
 	while(courant){
 		sprintf(str,"%d",courant->numero);
 		fprintf(f1,"%s ",str);
-		while(courant->points){
-			sprintf(str,"%.2f ",courant->points->x);
+		cpoint=courant->points;
+		cpt=comptepoints(courant);
+		sprintf(str,"%d",cpt);
+		fprintf(f1,"%s ",str);
+		while(cpoint){
+			sprintf(str,"%.2f ",cpoint->x);
 			fprintf(f1,"%s",str);
-			sprintf(str,"%.2f ",courant->points->y);
+			sprintf(str,"%.2f ",cpoint->y);
 			fprintf(f1,"%s",str);
-			courant->points=courant->points->suiv;
+			cpoint=cpoint->suiv;
 		}
 		fprintf(f1,"\n");
 		courant=courant->suiv;
@@ -174,7 +191,35 @@ void ecrireChaineTxt(Chaines* C,FILE *f1){
 
 	
 	
+void min_max(Chaines* C,double* minx,double* miny,double* maxx,double* maxy){
+	CellChaine* courant=C->chaines;
+	CellPoint* cpoint=NULL;
+	*minx=100;
+	*miny=100;
+	*maxx=0;
+	*maxy=0;
+	while(courant){
 		
+		cpoint=courant->points;
+		while(cpoint){
+			if(cpoint->x < *minx)
+				*minx=cpoint->x;
+			if(cpoint->y < *miny)
+				*miny=cpoint->y;
+			if(cpoint->x > *maxx)
+				*maxx=cpoint->x;
+			if(cpoint->y > *maxy)
+				*maxy=cpoint->y;
+			cpoint=cpoint->suiv;
+		}
+		courant=courant->suiv;
+	}
+}
+	
+	
+	
+	
+
 		
 		
 		
@@ -189,36 +234,89 @@ void afficheChaineSVG( Chaines *C, char* nomInstance )
 		return;
 	}
 
-	int i;
 	double x, y;
-	fprintf(stderr, "1\n" );
+	double minx,miny,maxx,maxy;
 	SVGwriter svg;
-
-	SVGinit( &svg, nomInstance, 100, 100 );
+	min_max(C,&minx,&miny,&maxx,&maxy);
+	SVGinit( &svg, nomInstance, maxx-minx, maxy-miny );
 
 	SVGlineColor( &svg, "Black" );
-	fprintf(stderr, "2\n" );
+	
 	SVGpointColor( &svg, "Red" );
 
 	CellChaine* tmp_chaine = C->chaines;
 
 	while( tmp_chaine ) {
-		fprintf(stderr, "3\n" );
+	
 		CellPoint* tmp_point = tmp_chaine->points;
 		while( tmp_point->suiv ) {
-			fprintf(stderr, "4\n" );
-			x = tmp_point->x;
-			y = tmp_point->y;
-			SVGpoint( &svg, tmp_point->x, tmp_point->y );
+			
+			x = tmp_point->x - minx;
+			y = tmp_point->y - miny;
+			SVGpoint( &svg, x, y );
 
 			tmp_point = tmp_point->suiv;
 
-			SVGline( &svg, x, y, tmp_point->x, tmp_point->y );
+			SVGline( &svg, x, y, tmp_point->x - minx, tmp_point->y - miny);
 		}
-		SVGpoint( &svg, tmp_point->x, tmp_point->y );
+		SVGpoint( &svg, tmp_point->x - minx , tmp_point->y -miny );
 		tmp_chaine = tmp_chaine->suiv;
 	}
 }
+
+double longueurChaine(CellChaine* C){
+	
+	CellPoint* cpoint=C->points;
+	
+	double longueurtot=0;
+	double x,y;
+	while(cpoint->suiv){
+		x=pow(cpoint->x-cpoint->suiv->x,2);
+		y=pow(cpoint->y-cpoint->suiv->y,2);
+		longueurtot+=sqrt(x+y);
+		cpoint=cpoint->suiv;
+	}
+	return longueurtot;
+}
+
+double longueurTotale(Chaines* C){
+	
+	double longueurtot=0;
+	CellChaine* courant=C->chaines;
+	double longchaine;
+	while(courant){
+		longchaine=longueurChaine(courant);
+		longueurtot+=longchaine;
+		courant=courant->suiv;
+	}
+	return longueurtot;
+}
+		
+
+int comptePointsTotal(Chaines* C){
+	
+	
+	int cpttot=0;
+	int cptchaine;
+	CellChaine* courant=C->chaines;
+	
+	while(courant){
+		cptchaine=comptepoints(C);
+		cpttot+=cptchaine;
+		courant=courant->suiv;
+		
+	}
+	return cpttot;
+	
+}	
+	
+		
+		
+		
+	
+	
+	
+	
 
 
 
