@@ -3,9 +3,10 @@
 #include <string.h>
 #include "Chaine.h"
 #include "entree_sortie.h"
+#include "SVGwriter.h"
 #define TMAX 50
 
-CellPoint* creerCellPoint( int x, int y ) 
+CellPoint* creerCellPoint( double x, double y ) 
 {
 	CellPoint* cpts = ( CellPoint* )malloc( sizeof( CellPoint ) );
 	if( !cpts ) {
@@ -81,7 +82,7 @@ void detruireChaines( Chaines* cpts )
 }
 
 
-Chaines* lectureChaine(FILE *f)
+void lectureChaine( FILE *f , Chaines* chaines )
 {
 
 		int nbchain,gma,nbpts;
@@ -89,14 +90,15 @@ Chaines* lectureChaine(FILE *f)
 		int numero;
 		//CellChaine* clchaine=NULL;
 		//CellPoint* clpoint=NULL;
-
+		fprintf(stderr, "1\n" );
 		char tempo[TMAX];
 
 		
 		if( f == NULL ) {
 			printf("Erreur lors de l'ouverture du fichier.\n");
-			return NULL;
+			return;
 		}
+		fprintf(stderr, "2\n" );
 
 		GetChaine( f, TMAX, tempo );
 		Skip( f );
@@ -106,11 +108,14 @@ Chaines* lectureChaine(FILE *f)
 		Skip( f );
 		gma = GetEntier( f );
 
-		Chaines* chaines = creerChaines( gma, nbchain );
+		chaines->gamma = gma;
+		chaines->nbChaines = nbchain;
+		chaines->chaines = NULL;
 
 		SkipLine( f );
 		
 		int i,j;
+		
 		for( i = 0; i < chaines->nbChaines; i++ ) {
 
 			numero = GetEntier( f );
@@ -123,6 +128,7 @@ Chaines* lectureChaine(FILE *f)
 			chaines->chaines = cellchaine;
 
 			for( j = 0; j < nbpts; j++ ){
+
 				x = GetReel( f );
 				Skip( f );
 				y = GetReel( f );
@@ -133,8 +139,8 @@ Chaines* lectureChaine(FILE *f)
 				cellchaine->points = cellpoint;
 			}
 		}	
-		return chaines;
 }
+
 
 
 void ecrireChaineTxt(Chaines* C,FILE *f1){
@@ -175,3 +181,46 @@ void ecrireChaineTxt(Chaines* C,FILE *f1){
 		
 		
 		
+
+void afficheChaineSVG( Chaines *C, char* nomInstance ) 
+{
+	if( !C ) {
+		printf( "Fichier Vide\n" );
+		return;
+	}
+
+	int i;
+	double x, y;
+	fprintf(stderr, "1\n" );
+	SVGwriter svg;
+
+	SVGinit( &svg, nomInstance, 100, 100 );
+
+	SVGlineColor( &svg, "Black" );
+	fprintf(stderr, "2\n" );
+	SVGpointColor( &svg, "Red" );
+
+	CellChaine* tmp_chaine = C->chaines;
+
+	while( tmp_chaine ) {
+		fprintf(stderr, "3\n" );
+		CellPoint* tmp_point = tmp_chaine->points;
+		while( tmp_point->suiv ) {
+			fprintf(stderr, "4\n" );
+			x = tmp_point->x;
+			y = tmp_point->y;
+			SVGpoint( &svg, tmp_point->x, tmp_point->y );
+
+			tmp_point = tmp_point->suiv;
+
+			SVGline( &svg, x, y, tmp_point->x, tmp_point->y );
+		}
+		SVGpoint( &svg, tmp_point->x, tmp_point->y );
+		tmp_chaine = tmp_chaine->suiv;
+	}
+}
+
+
+
+
+

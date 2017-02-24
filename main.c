@@ -6,19 +6,18 @@
 void menu()
 {
 	
-	printf("1: LECTURE DU FICHIER\n");
+	printf( "1: LECTURE DU FICHIER\n" );
+	printf( "2: AFFICHAGE DU FICHIER\n" );
 }
-
 
 
 int main(int argc, char* *argv)
 {
-
+	Chaines C;
 	int ch;
 	char* nomfic = strdup(argv[1]);
 
 	FILE* f = fopen(nomfic,"r");
-
 	if(f == NULL){
 		printf("Le fichier n'a pas pu être ouvrir\n");
 		return 2;
@@ -32,7 +31,12 @@ int main(int argc, char* *argv)
 		switch(ch){
 
 			case 1:
-				lectureChaine(f);
+				lectureChaine( f, &C );
+				printf("Lecture\n");
+				
+				break;
+			case 2:
+				afficheChaineSVG( &C, "aff_chaines" );
 				printf("Lecture\n");
 				
 				break;
