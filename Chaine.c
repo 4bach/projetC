@@ -73,7 +73,7 @@ void detruireListeCellChaine( CellChaine* cpts )
 void detruireChaines( Chaines* cpts )
 {
 	if( !cpts ) return;
-	CellPoint* tmp;
+	//CellPoint* tmp;
 	while( cpts ) {
 		detruireListeCellChaine( cpts->chaines );
 		free( cpts );
@@ -87,7 +87,7 @@ Chaines* lectureChaine(FILE *f)
 		int nbchain,gma,nbpts;
 		double x, y;
 		int numero;
-		CellChaine* clchaine=NULL;
+		//CellChaine* clchaine=NULL;
 		//CellPoint* clpoint=NULL;
 
 		char tempo[TMAX];
@@ -135,3 +135,43 @@ Chaines* lectureChaine(FILE *f)
 		}	
 		return chaines;
 }
+
+
+void ecrireChaineTxt(Chaines* C,FILE *f1){
+	
+	CellChaine* courant=C->chaines;
+	
+	
+	char str[10]="";
+	fprintf(f1,"NbChain:");
+	sprintf(str,"%d",C->nbChaines);
+	fprintf(f1,"%s\n",str);
+	fprintf(f1,"Gamma:");
+	sprintf(str,"%d",C->gamma);
+	fprintf(f1,"%s\n\n",str);
+	
+	
+	while(courant){
+		sprintf(str,"%d",courant->numero);
+		fprintf(f1,"%s ",str);
+		while(courant->points){
+			sprintf(str,"%.2f ",courant->points->x);
+			fprintf(f1,"%s",str);
+			sprintf(str,"%.2f ",courant->points->y);
+			fprintf(f1,"%s",str);
+			courant->points=courant->points->suiv;
+		}
+		fprintf(f1,"\n");
+		courant=courant->suiv;
+	}
+}
+
+	
+	
+		
+		
+		
+		
+		
+		
+		

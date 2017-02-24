@@ -1,5 +1,6 @@
 #include "entree_sortie.h"
 #include <ctype.h>
+#include <string.h>
 
 
 /*LIT LE PROCHAIN CARACTERE NON VIDE */

@@ -1,9 +1,10 @@
 #ifndef ENTREE_SORTIE_H
 #define ENTREE_SORTIE_H
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
 
 /* Cette librairie permet de lire facilement un fichier texte en le lisant "mot a mot" o\'u un mot est un ensemble de caracteres sans blanc ou retour chariot.
 Si vous connaissez a l'avance la structure du fichier, vous pouvez lire ces mots directement dans un format approprié: si ce mot est un entier, utiliser GetEntier; si ce mot est une chaine, utiliser GetChaine; etc.
