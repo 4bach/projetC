@@ -3,6 +3,7 @@
 #include <string.h>
 #include "entree_sortie.h"
 #include "Reseau.h"
+#include "Chaine.h"
 
 
 
@@ -15,21 +16,82 @@ Noeud* rechercheCreeNoeudListe(Reseau* R,double x,double y){
 	CellNoeud* courantcl=R->noeuds;
 	while(courantcl){
 		if(courantcl->nd->x==x && courantcl->nd->y==y){
-			printf("Noeud trouvé...Num:%d\n",courantcl->nd->num);
 			return courantcl->nd;
 		}
 		courantcl=courantcl->suiv;
 	}
-	courantcl->nd=(Noeud*)malloc(sizeof(Noeud));
-	if(courantcl->nd==NULL){
+	Noeud* nv=(Noeud*)malloc(sizeof(Noeud));
+	CellNoeud* Cl=(CellNoeud*)malloc(sizeof(CellNoeud));
+	if(nv==NULL || Cl==NULL){
 		printf("Erreur d'allocation de noeud\n");
 		return NULL;
 	}
-	courantcl->nd->num=R->nbNoeuds+1;
-	courantcl->nd->x=x;
-	courantcl->nd->y=y;
-	courantcl->nd->voisins=NULL;
+	nv->num=R->nbNoeuds+1;
+	nv->x=x;
+	nv->y=y;
+	nv->voisins=NULL;
+	Cl->nd=nv;
 	R->nbNoeuds++;
-	printf("Noeud crée... Num:%d\n",courantcl->nd->num);
-	return courantcl->nd;	
+	Cl=R->noeuds;
+	R->noeuds=Cl;
+	return nv;	
 }
+
+
+Reseau* reconstitueReseauListe(Chaines* C){
+	int bool=0;
+	CellChaine* courant=C->chaines;
+	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
+	R->nbNoeuds=0;
+	R->gamma=C->gamma;
+	R->noeuds=NULL;
+	R->commodites=NULL;
+	CellCommodite* courantco=NULL;
+	CellPoint* cpoint=NULL;
+	Noeud* precedent=NULL;
+	Noeud * noeudCourant= NULL;
+	while(courant){
+		cpoint=courant->points;
+		courantco=(CellCommodite*)malloc(sizeof(CellCommodite));
+		while(cpoint){
+			if(bool==0){
+				noeudCourant = rechercheCreeNoeudListe(R,cpoint->x,cpoint->y);
+				courantco->extrA=noeudCourant;
+				bool++;
+			}
+			else{
+				noeudCourant = rechercheCreeNoeudListe(R,cpoint->x,cpoint->y);
+				CellNoeud * cellPrec = (CellNoeud *) malloc(sizeof(CellNoeud));
+				cellPrec->nd = precedent;
+				cellPrec->suiv = noeudCourant->voisins;
+				noeudCourant->voisins = cellPrec;
+				
+				CellNoeud * cellCour = (CellNoeud *) malloc(sizeof(CellNoeud));
+				cellCour->nd = noeudCourant;
+				cellCour->suiv = precedent->voisins;
+				precedent->voisins = cellCour;
+				
+				
+				if(cpoint->suiv==NULL){
+					courantco->extrB=noeudCourant;
+				}
+				
+			}
+			cpoint=cpoint->suiv;
+			precedent = noeudCourant;
+		}
+		bool=0;
+		courantco=R->commodites;
+		R->commodites=courantco;
+		courant=courant->suiv;
+	}
+			
+	return R;
+	
+
+
+
+
+
+}
+
