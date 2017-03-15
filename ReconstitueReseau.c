@@ -5,6 +5,7 @@
 #include "entree_sortie.h"
 #include "SVGwriter.h"
 #include "Reseau.h"
+#include "Hachage.h"
 
 void menu(void)
 {

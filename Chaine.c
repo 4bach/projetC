@@ -141,6 +141,7 @@ void lectureChaine( FILE *f , Chaines* chaines )
 			}
 		}	
 }
+
 int comptepoints(CellChaine* C){
 	int cpt=0;
 	if(C==NULL){
@@ -301,7 +302,7 @@ int comptePointsTotal(Chaines* C){
 	CellChaine* courant=C->chaines;
 	
 	while(courant){
-		cptchaine=comptepoints(C);
+		cptchaine=comptepoints(courant);
 		cpttot+=cptchaine;
 		courant=courant->suiv;
 		

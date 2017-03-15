@@ -27,7 +27,7 @@ typedef struct cellCommodite {
 /* Un reseau */
 typedef struct {
     int nbNoeuds;                   /* Nombre de noeuds du reseau */
-    int gamma;                      /* Nombre maximal de fibres par cable */
+    int gamma;                   /* Nombre maximal de fibres par cable */
     CellNoeud *noeuds;              /* Liste des noeuds du reseau */
     CellCommodite *commodites;      /* Liste des commodites a relier */
 } Reseau;
@@ -38,5 +38,7 @@ void ecrireReseauTxt(Reseau *R, FILE *f);
 int nbLiaison(Reseau *R);
 int nbCommodite(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
+Noeud* creerNoeud( Reseau* R,double x,double y );
+CellNoeud* creerCellNoeud( Noeud* nv );
 #endif
 
