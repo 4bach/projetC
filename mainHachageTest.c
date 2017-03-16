@@ -5,21 +5,24 @@
 
 int main(int argc,char* *argv)
 {
-
-	int i, j;
-	int clef = 0;
-	int position = 0;
-	int taille = 10;
-	for ( taille = 7; taille < 20; taille++ ) {
-		printf( "TAILLE = %d\n", taille );
-		for( i = 0; i < 10; i++ ){
-			for( i = 0; i < 10; i++ ){
-				clef = fonctionClef( i, j );
-				position = fonctionHachage( clef, taille );
-				printf( "clef = %d, position = %d\n", clef, position );
-			}
-		}
+	Chaines C;
+	if(argc!=2){
+		printf("Il faut au moins un argument\n");
+		return 1;}
+	char* nomfic=strdup(argv[1]);
+	FILE* f;
+	
+	f=fopen(nomfic,"r");
+	if(f==NULL){
+		printf("Le fichier n'a pas pu être ouvrir\n");
+		return 1;
 	}
+	printf("Lecture\n");
+	lectureChaine(f,&C);
+	fclose(f);
+
+	Reseau* R = recreeReseauHachage(&C);
+
 
 
 	return 0;

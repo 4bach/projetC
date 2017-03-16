@@ -6,6 +6,7 @@
 #include "Chaine.h"
 
 
+//IL SEMBLE QUE TOUT LES NOEUDS NE SONT PAS CREE
 Noeud* creerNoeud( Reseau* R,double x,double y )
 {
 	if (R==NULL){
@@ -33,10 +34,12 @@ CellNoeud* creerCellNoeud( Noeud* nv )
 		return NULL;
 	}
 	Cl->nd=nv;
+	if( nv) printf("X= %f  Y=%f\n",nv->x,nv->y);
 	Cl->suiv = NULL;
 	return Cl;
 }
 
+// A ETE RACCOURCI AVEC LES FONCTIONS CI DESSUS
 Noeud* rechercheCreeNoeudListe(Reseau* R,double x,double y)
 {
 	if(R==NULL){
@@ -59,16 +62,25 @@ Noeud* rechercheCreeNoeudListe(Reseau* R,double x,double y)
 	return nv;	
 }
 
+// SIMPLE FONCTION DINIATIALISATION
+Reseau* intialiseReseau() 
+{
+	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
+	R->nbNoeuds=0;
+	R->gamma=0;
+	R->noeuds=NULL;
+	R->commodites=NULL;
+	return R;
+}
 
 Reseau* reconstitueReseauListe(Chaines* C)
 {
 	int bool=0;
 	CellChaine* courant=C->chaines;
-	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
-	R->nbNoeuds=0;
+
+	Reseau* R = intialiseReseau();
 	R->gamma=C->gamma;
-	R->noeuds=NULL;
-	R->commodites=NULL;
+
 	CellCommodite* courantco=NULL;
 	CellPoint* cpoint=NULL;
 	Noeud* precedent=NULL;
