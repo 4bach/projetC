@@ -41,11 +41,12 @@ int main(int argc,char* *argv){
 
 			case 1:
 				printf("Reconstitution du réseau par liste chainée.\n");
-				reconstitueReseauListe(&C);
+				Reseau* R=reconstitueReseauListe(&C);
 				break;
 
 			case 2:
-				printf("Methode à definir\n");
+				printf("Reconstitution du réseau par table de hachage\n");
+				Reseau* R= recreeReseauHachage(&C);
 				break;
 			case 3:
 				

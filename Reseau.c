@@ -6,7 +6,16 @@
 #include "Chaine.h"
 
 
-//IL SEMBLE QUE TOUT LES NOEUDS NE SONT PAS CREE
+Reseau* intialiseReseau(void) 
+{
+	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
+	R->nbNoeuds=0;
+	R->gamma=0;
+	R->noeuds=NULL;
+	R->commodites=NULL;
+	return R;
+}
+
 Noeud* creerNoeud( Reseau* R,double x,double y )
 {
 	if (R==NULL){
@@ -26,6 +35,8 @@ Noeud* creerNoeud( Reseau* R,double x,double y )
 	R->nbNoeuds++;
 	return nv;
 }
+
+
 CellNoeud* creerCellNoeud( Noeud* nv ) 
 {
 	CellNoeud* Cl=(CellNoeud*)malloc(sizeof(CellNoeud));
@@ -34,53 +45,41 @@ CellNoeud* creerCellNoeud( Noeud* nv )
 		return NULL;
 	}
 	Cl->nd=nv;
-	if( nv) printf("X= %f  Y=%f\n",nv->x,nv->y);
 	Cl->suiv = NULL;
 	return Cl;
 }
 
-// A ETE RACCOURCI AVEC LES FONCTIONS CI DESSUS
-Noeud* rechercheCreeNoeudListe(Reseau* R,double x,double y)
-{
-	if(R==NULL){
-		printf("Reseau vide\n");
-		return NULL;
-	}
-	CellNoeud* courantcl=R->noeuds;
-	while(courantcl){
-		if(courantcl->nd->x==x && courantcl->nd->y==y){
-			return courantcl->nd;
-		}
-		courantcl=courantcl->suiv;
-	}
-	
-	Noeud* nv = creerNoeud( R, x, y );
+
+
+
+
+ Noeud* rechercheCreeNoeudListe(Reseau* R,double x,double y){
+ 	if(R==NULL){
+ 		printf("Reseau NULL\n");
+ 		return NULL;
+ 	}
+ 	CellNoeud* courantcl=R->noeuds;
+ 	while(courantcl){
+ 		if(courantcl->nd->x==x && courantcl->nd->y==y){
+				return courantcl->nd;
+ 		}
+ 		courantcl=courantcl->suiv;
+ 	}
+ 	Noeud* nv = creerNoeud( R, x, y );
 	CellNoeud* Cl = creerCellNoeud( nv );
-	//le seul bail que j'ai changé avant y avait Cl=R->noeuds; ce qui a pas de sens
-	Cl->suiv=R->noeuds;
+	Cl=R->noeuds;
 	R->noeuds=Cl;
 	return nv;	
 }
 
-// SIMPLE FONCTION DINIATIALISATION
-Reseau* intialiseReseau() 
-{
-	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
-	R->nbNoeuds=0;
-	R->gamma=0;
-	R->noeuds=NULL;
-	R->commodites=NULL;
-	return R;
-}
-
-Reseau* reconstitueReseauListe(Chaines* C)
-{
+Reseau* reconstitueReseauListe(Chaines* C){
 	int bool=0;
 	CellChaine* courant=C->chaines;
-
-	Reseau* R = intialiseReseau();
+	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
+	R->nbNoeuds=0;
 	R->gamma=C->gamma;
-
+	R->noeuds=NULL;
+	R->commodites=NULL;
 	CellCommodite* courantco=NULL;
 	CellPoint* cpoint=NULL;
 	Noeud* precedent=NULL;
@@ -122,6 +121,105 @@ Reseau* reconstitueReseauListe(Chaines* C)
 	}
 			
 	return R;
-	
 }
 
+int nbCommodite(Reseau *R){
+	CellCommodite* courant=R->commodites;
+	int cpt=0;
+	while(courant){
+		cpt++;
+		courant=courant->suiv;
+	}
+	return cpt;
+}
+
+int nbLiaison(Reseau* R){
+	
+	int cpt=0;
+	CellNoeud* clcourant=R->noeuds;
+	CellNoeud* courantbis=NULL;
+	while(clcourant){
+		courantbis=clcourant->nd->voisins;
+		while(courantbis){
+			cpt++;
+			courantbis=courantbis->suiv;
+		}
+		clcourant=clcourant->suiv;
+	}
+	return cpt/2;
+}
+int comptenoeud(Reseau *R){
+	CellNoeud* courant=R->noeuds;
+	int cpt=0;
+	while(courant){
+		cpt++;
+		courant=courant->suiv;
+	}
+	return cpt;
+}
+
+
+void ecrireReseauTxt(Reseau* R,FILE* f1 ){
+	CellCommodite* comcourant=R->commodites;
+	CellNoeud* ndcourant=R->noeuds;
+	int cpt;
+	char str[10]="";
+	fprintf(f1,"NbNoeuds: ");
+	cpt=comptenoeud(R);
+	sprintf(str,"%d",cpt);
+	fprintf(f1,"%s\n",str);
+	
+	fprintf(f1,"NbLiaison: ");
+	cpt=nbLiaison(R);
+	sprintf(str,"%d",cpt);
+	fprintf(f1,"%s\n",str);
+	
+	fprintf(f1,"NbCommodite: ");
+	cpt=nbCommodite(R);
+	sprintf(str,"%d",cpt);
+	fprintf(f1,"%s\n",str);
+	
+	fprintf(f1,"Gamma: ");
+	sprintf(str,"%d",R->gamma);
+	fprintf(f1,"%s\n\n",str);
+	
+	while(ndcourant){
+		
+		fprintf(f1,"v ");
+		sprintf(str,"%d",ndcourant->nd->num);
+		fprintf(f1,"%s ",str);
+		
+		sprintf(str,"%f",ndcourant->nd->x);
+		fprintf(f1,"%s ",str);
+		
+		sprintf(str,"%f",ndcourant->nd->y);
+		fprintf(f1,"%s\n",str);
+		
+		ndcourant=ndcourant->suiv;
+		
+	}
+	fprintf(f1,"\n");
+	
+	while(comcourant){
+		
+		fprintf(f1,"k ");
+		
+		sprintf(str,"%d",comcourant->extrA->num);
+		fprintf(f1,"%s ",str);
+		
+		sprintf(str,"%d",comcourant->extrB->num);
+		fprintf(f1,"%s\n",str);
+		
+		comcourant=comcourant->suiv;
+	}
+	
+}
+	
+	
+	
+	
+	
+	
+	
+
+	

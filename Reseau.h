@@ -41,5 +41,7 @@ void afficheReseauSVG(Reseau *R, char* nomInstance);
 Noeud* creerNoeud( Reseau* R,double x,double y );
 CellNoeud* creerCellNoeud( Noeud* nv );
 Reseau* intialiseReseau() ;
+int comptenoeud(Reseau *R);
+
 #endif
 
