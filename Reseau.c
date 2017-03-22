@@ -4,6 +4,7 @@
 #include "entree_sortie.h"
 #include "Reseau.h"
 #include "Chaine.h"
+#include "SVGwriter.h"
 
 
 
@@ -221,7 +222,52 @@ void ecrireReseauTxt(Reseau* R,FILE* f1 ){
 	
 }
 	
+void afficheReseauSVG(Reseau *R, char* nomInstance) 
+{
+	if( !R ) {
+		printf( "Fichier Vide\n" );
+		return;
+	}
+
+	double x, y;
+	SVGwriter svg;
+	double minx=100;
+	double miny=100;
+	double maxx=0;
+	double maxy=0;
+	SVGinit( &svg, nomInstance, maxx-minx, maxy-miny );
+
+	SVGlineColor( &svg, "Black" );
 	
+	SVGpointColor( &svg, "Red" );
+
+	CellNoeud* tmp_noeud = R->noeuds;
+	CellCommodite * tmp_commo = R->commodites;
+	Noeud* a;
+	Noeud* b;
+
+
+	while( tmp_noeud ) {
+
+		x = tmp_noeud->nd->x;
+		y = tmp_noeud->nd->y;
+		printf("noeud : X: %f  Y:%f\n",x,y);
+		SVGpoint( &svg, x, y );
+
+		tmp_noeud = tmp_noeud->suiv;
+
+	}
+
+	while( tmp_commo ) {
+
+		a = tmp_commo->extrA;
+		b = tmp_commo->extrB;
+		SVGline( &svg, a->x, a->y, b->x, b->y);
+		printf("coomodit : X: %f  Y:%f\n", a->x, a->y);
+		tmp_commo = tmp_commo->suiv;
+	}
+
+}
 	
 	
 	

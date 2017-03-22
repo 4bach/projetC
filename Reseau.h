@@ -43,6 +43,7 @@ Noeud* construitNoeud( double x, double y, int num );
 CellNoeud* creerCellNoeud( Noeud* nv );
 Reseau* intialiseReseau() ;
 int comptenoeud(Reseau *R);
+void afficheReseauSVG(Reseau *R, char* nomInstance);
 
 #endif
 
