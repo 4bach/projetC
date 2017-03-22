@@ -191,7 +191,7 @@ Reseau* recreeReseauHachage(Chaines *C)
 			precedent = noeudCourant;
 		}
 		bool=0;
-		courantco=R->commodites;
+		courantco->suiv=R->commodites;
 		R->commodites=courantco;
 		courant=courant->suiv;
 	}

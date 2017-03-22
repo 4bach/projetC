@@ -122,7 +122,7 @@ Reseau* reconstitueReseauListe(Chaines* C){
 			precedent = noeudCourant;
 		}
 		bool=0;
-		courantco=R->commodites;
+		courantco->suiv=R->commodites;
 		R->commodites=courantco;
 		courant=courant->suiv;
 	}
@@ -231,10 +231,11 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 
 	double x, y;
 	SVGwriter svg;
-	double minx=100;
-	double miny=100;
-	double maxx=0;
-	double maxy=0;
+	double minx=0;
+	double miny=0;
+	double maxx=100;
+	double maxy=100;
+	//min_max_r( R, &minx, &miny, &maxx, &maxy );
 	SVGinit( &svg, nomInstance, maxx-minx, maxy-miny );
 
 	SVGlineColor( &svg, "Black" );
@@ -249,8 +250,8 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 
 	while( tmp_noeud ) {
 
-		x = tmp_noeud->nd->x;
-		y = tmp_noeud->nd->y;
+		x = tmp_noeud->nd->x - minx;
+		y = tmp_noeud->nd->y - miny;
 		printf("noeud : X: %f  Y:%f\n",x,y);
 		SVGpoint( &svg, x, y );
 
@@ -262,14 +263,34 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 
 		a = tmp_commo->extrA;
 		b = tmp_commo->extrB;
-		SVGline( &svg, a->x, a->y, b->x, b->y);
+		SVGline( &svg, a->x- minx, a->y- miny, b->x- minx, b->y- miny);
 		printf("coomodit : X: %f  Y:%f\n", a->x, a->y);
 		tmp_commo = tmp_commo->suiv;
 	}
 
 }
 	
+void min_max_r(Reseau *R,double* minx,double* miny,double* maxx,double* maxy)
+{
+	CellNoeud* courant=R->noeuds;
+	*minx=100;
+	*miny=100;
+	*maxx=0;
+	*maxy=0;
+	while(courant->nd){
+		
+		if(courant->nd->x < *minx)
+			*minx=courant->nd->x;
+		if(courant->nd->y < *miny)
+			*miny=courant->nd->y;
+		if(courant->nd->x > *maxx)
+			*maxx=courant->nd->x;
+		if(courant->nd->y > *maxy)
+			*maxy=courant->nd->y;
 	
+		courant=courant->suiv;
+	}
+}	
 	
 	
 	
