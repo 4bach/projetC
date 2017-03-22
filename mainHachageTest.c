@@ -21,6 +21,8 @@ int main(int argc,char* *argv)
 	lectureChaine(f,&C);
 	fclose(f);
 
+	//TableHachage* th = creerTableHachage( &C );
+	//afficheHachage( th );
 	Reseau* R = recreeReseauHachage(&C);
 
 

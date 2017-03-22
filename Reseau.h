@@ -39,6 +39,7 @@ int nbLiaison(Reseau *R);
 int nbCommodite(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
 Noeud* creerNoeud( Reseau* R,double x,double y );
+Noeud* construitNoeud( double x, double y, int num );
 CellNoeud* creerCellNoeud( Noeud* nv );
 Reseau* intialiseReseau() ;
 int comptenoeud(Reseau *R);

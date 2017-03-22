@@ -13,6 +13,10 @@ typedef struct {
 
 TableHachage* initTableHachage( int m );
 
+void afficheHachage( TableHachage* tH ) ;
+
+TableHachage* creerTableHachage( Chaines *C ) ;
+
 int fonctionClef( int x, int y );
 
 int fonctionHachage( int clef, int taille );

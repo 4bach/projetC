@@ -142,7 +142,8 @@ void lectureChaine( FILE *f , Chaines* chaines )
 		}	
 }
 
-int comptepoints(CellChaine* C){
+int comptepoints(CellChaine* C)
+{
 	int cpt=0;
 	if(C==NULL){
 		return 0;
@@ -157,7 +158,8 @@ int comptepoints(CellChaine* C){
 }
 
 
-void ecrireChaineTxt(Chaines* C,FILE *f1){
+void ecrireChaineTxt(Chaines* C,FILE *f1)
+{
 	
 	CellChaine* courant=C->chaines;
 	CellPoint* cpoint=NULL;
@@ -192,7 +194,8 @@ void ecrireChaineTxt(Chaines* C,FILE *f1){
 
 	
 	
-void min_max(Chaines* C,double* minx,double* miny,double* maxx,double* maxy){
+void min_max(Chaines* C,double* minx,double* miny,double* maxx,double* maxy)
+{
 	CellChaine* courant=C->chaines;
 	CellPoint* cpoint=NULL;
 	*minx=100;
@@ -216,17 +219,6 @@ void min_max(Chaines* C,double* minx,double* miny,double* maxx,double* maxy){
 		courant=courant->suiv;
 	}
 }
-	
-	
-	
-	
-
-		
-		
-		
-		
-		
-		
 
 void afficheChaineSVG( Chaines *C, char* nomInstance ) 
 {
@@ -310,16 +302,3 @@ int comptePointsTotal(Chaines* C){
 	return cpttot;
 	
 }	
-	
-		
-		
-		
-	
-	
-	
-	
-
-
-
-
-

@@ -6,6 +6,7 @@
 #include "Chaine.h"
 
 
+
 Reseau* intialiseReseau(void) 
 {
 	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
@@ -16,22 +17,27 @@ Reseau* intialiseReseau(void)
 	return R;
 }
 
+Noeud* construitNoeud( double x, double y, int num ) {
+	Noeud* nv=(Noeud*)malloc(sizeof(Noeud));
+	if(nv==NULL){
+		printf("Erreur d'allocation de noeud\n");
+		return NULL;
+	}
+	nv->num = num;
+	nv->x=x;
+	nv->y=y;
+	nv->voisins=NULL;
+	return nv;
+}
+//IL SEMBLE QUE TOUT LES NOEUDS NE SONT PAS CREE
 Noeud* creerNoeud( Reseau* R,double x,double y )
 {
 	if (R==NULL){
 		return NULL;
 	}
 
-	Noeud* nv=(Noeud*)malloc(sizeof(Noeud));
-	if(nv==NULL){
-		printf("Erreur d'allocation de noeud\n");
-		return NULL;
-	}
+	Noeud* nv = construitNoeud( x, y, R->nbNoeuds+1 );
 
-	nv->num=R->nbNoeuds+1;
-	nv->x=x;
-	nv->y=y;
-	nv->voisins=NULL;
 	R->nbNoeuds++;
 	return nv;
 }

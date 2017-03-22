@@ -24,6 +24,7 @@ int main(int argc,char* *argv){
 		return 1;}
 	char* nomfic=strdup(argv[1]);
 	FILE* f;
+	Reseau* R;
 	f=fopen(nomfic,"r");
 	if(f==NULL){
 		printf("Le fichier n'a pas pu être ouvrir\n");
@@ -41,12 +42,12 @@ int main(int argc,char* *argv){
 
 			case 1:
 				printf("Reconstitution du réseau par liste chainée.\n");
-				Reseau* R=reconstitueReseauListe(&C);
+				R=reconstitueReseauListe(&C);
 				break;
 
 			case 2:
 				printf("Reconstitution du réseau par table de hachage\n");
-				Reseau* R= recreeReseauHachage(&C);
+				R= recreeReseauHachage(&C);
 				break;
 			case 3:
 				
