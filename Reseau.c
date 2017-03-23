@@ -250,9 +250,13 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 
 	while( tmp_noeud ) {
 
+		while( tmp_noeud->nd->voisins ) {
+			//printf("noeud : X: %f  Y:%f\n",tmp_noeud->nd->voisins->nd->x,tmp_noeud->nd->voisins->nd->x);
+			tmp_noeud->nd->voisins = tmp_noeud->nd->voisins->suiv;
+		}
 		x = tmp_noeud->nd->x - minx;
 		y = tmp_noeud->nd->y - miny;
-		printf("noeud : X: %f  Y:%f\n",x,y);
+		//printf("\tVoisins : noeud : X: %f  Y:%f\n",x,y);
 		SVGpoint( &svg, x, y );
 
 		tmp_noeud = tmp_noeud->suiv;
@@ -263,8 +267,9 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 
 		a = tmp_commo->extrA;
 		b = tmp_commo->extrB;
-		SVGline( &svg, a->x- minx, a->y- miny, b->x- minx, b->y- miny);
-		printf("coomodit : X: %f  Y:%f\n", a->x, a->y);
+		SVGline( &svg, a->x - minx, a->y - miny, b->x - minx, b->y - miny);
+		//printf("coomodit : X: %f  Y:%f to X: %f  Y:%f\n", a->x, a->y, b->x, b->y);
+
 		tmp_commo = tmp_commo->suiv;
 	}
 
