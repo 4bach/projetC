@@ -23,8 +23,8 @@ int main(int argc,char* *argv)
 
 	//TableHachage* th = creerTableHachage( &C );
 	//afficheHachage( th );
-	//Reseau* R = reconstitueReseauListe(&C);
-	Reseau* R = recreeReseauHachage(&C);
+	Reseau* R = reconstitueReseauListe(&C);
+	//Reseau* R = recreeReseauHachage(&C);
 	afficheReseauSVG( R, "aff_reseau" );
 
 

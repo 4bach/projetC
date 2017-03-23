@@ -74,7 +74,7 @@ CellNoeud* creerCellNoeud( Noeud* nv )
  	}
  	Noeud* nv = creerNoeud( R, x, y );
 	CellNoeud* Cl = creerCellNoeud( nv );
-	Cl=R->noeuds;
+	Cl->suiv=R->noeuds;
 	R->noeuds=Cl;
 	return nv;	
 }
