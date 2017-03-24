@@ -8,6 +8,88 @@
 
 
 
+Liaison* creerLiaison(int n1,double x1,double y1, int n2,double x2,double y2){
+	
+	Liaison* L=(Liaison*)malloc(sizeof(Liaison));
+	if(L==NULL)
+		return NULL;
+	
+	L->num1=n1;
+	L->x1=x1;
+	L->y1=y1;
+	L->num2=n2;
+	L->x2=x2;
+	L->y2=y2;
+	L->suiv=NULL;
+	
+	return L;
+	
+	
+	
+}
+
+int RechercheLiaison(Liaison* L,int n1, int n2){
+	Liaison* courant=L;
+	while(courant){
+		
+		if((courant->num1==n1 && courant->num2==n2) || (courant->num2==n1 && courant->num1==n2))
+				return 0;
+		
+	courant=courant->suiv;
+}
+return 1;
+		
+	
+	
+}
+
+void DetruireLiaison(Liaison*L){
+	
+	Liaison* tmp=L;
+	
+	while( L) {
+		tmp = L->suiv;
+		free( L );
+		L = tmp;
+	}
+		
+
+
+}
+
+
+Liaison* creerListeLiaison(Reseau* R){
+	
+	CellNoeud* ndcourant_l=R->noeuds;
+	CellNoeud* voisincourant;
+	Liaison*L=NULL;
+	Liaison*NewL=NULL;
+	
+	while(ndcourant_l){
+		
+			
+			
+			voisincourant=ndcourant_l->nd->voisins;
+			while(voisincourant){
+				
+				if(RechercheLiaison(L,ndcourant_l->nd->num,voisincourant->nd->num)==1){
+					NewL=creerLiaison(ndcourant_l->nd->num,ndcourant_l->nd->x,ndcourant_l->nd->y,voisincourant->nd->num,voisincourant->nd->x,voisincourant->nd->y);
+					NewL->suiv=L;
+					L=NewL;
+				}
+				voisincourant=voisincourant->suiv;
+			}
+			ndcourant_l=ndcourant_l->suiv;
+		}
+	return L;
+	
+	
+	
+	
+	
+}
+
+
 Reseau* intialiseReseau(void) 
 {
 	Reseau* R=(Reseau*)malloc(sizeof(Reseau));
@@ -159,19 +241,18 @@ int nbCommodite(Reseau *R){
 }
 
 int nbLiaison(Reseau* R){
-	
+	Liaison* L=creerListeLiaison(R);
+	Liaison* Cour=L;
 	int cpt=0;
-	CellNoeud* clcourant=R->noeuds;
-	CellNoeud* courantbis=NULL;
-	while(clcourant){
-		courantbis=clcourant->nd->voisins;
-		while(courantbis){
-			cpt++;
-			courantbis=courantbis->suiv;
-		}
-		clcourant=clcourant->suiv;
+	
+	while(Cour){
+		cpt++;
+		Cour=Cour->suiv;
 	}
-	return cpt/2;
+	
+	DetruireLiaison(L);
+	
+	return cpt;
 }
 int comptenoeud(Reseau *R){
 	CellNoeud* courant=R->noeuds;
@@ -187,8 +268,8 @@ int comptenoeud(Reseau *R){
 void ecrireReseauTxt(Reseau* R,FILE* f1 ){
 	CellCommodite* comcourant=R->commodites;
 	CellNoeud* ndcourant=R->noeuds;
-	CellNoeud* ndcourant_l=R->noeuds;
-	CellNoeud* voisincourant;
+	
+	Liaison* L=creerListeLiaison(R);
 	int cpt;
 	char str[10]="";
 	fprintf(f1,"NbNoeuds: ");
@@ -212,6 +293,8 @@ void ecrireReseauTxt(Reseau* R,FILE* f1 ){
 	
 	while(ndcourant){
 		
+		
+		
 		fprintf(f1,"v ");
 		sprintf(str,"%d",ndcourant->nd->num);
 		fprintf(f1,"%s ",str);
@@ -227,23 +310,17 @@ void ecrireReseauTxt(Reseau* R,FILE* f1 ){
 	}
 	fprintf(f1,"\n");
 	
-	while(ndcourant_l){
+	while(L){
 	
-		
-		
-		voisincourant=ndcourant_l->nd->voisins;
-		while(voisincourant){
 			fprintf(f1,"l ");
-			sprintf(str,"%d",voisincourant->nd->num);
+			sprintf(str,"%d",L->num1);
 			fprintf(f1,"%s ",str);
-			sprintf(str,"%d",ndcourant_l->nd->num);
+			sprintf(str,"%d",L->num2);
 			fprintf(f1,"%s ",str);
 			fprintf(f1,"\n");
-			voisincourant=voisincourant->suiv;
-		}
-		ndcourant_l=ndcourant_l->suiv;
+			L=L->suiv;
 	}
-	
+	DetruireLiaison(L);
 	fprintf(f1,"\n");
 	
 	while(comcourant){
@@ -270,11 +347,11 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 
 	double x, y;
 	SVGwriter svg;
-	double minx=0;
-	double miny=0;
-	double maxx=100;
-	double maxy=100;
-	//min_max_r( R, &minx, &miny, &maxx, &maxy );
+	double minx;
+	double miny;
+	double maxx;
+	double maxy;
+	min_max_r( R, &minx, &miny, &maxx, &maxy );
 	SVGinit( &svg, nomInstance, maxx-minx, maxy-miny );
 
 	SVGlineColor( &svg, "Black" );
@@ -283,6 +360,8 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 
 	CellNoeud* tmp_noeud = R->noeuds;
 	CellCommodite * tmp_commo = R->commodites;
+	Liaison* L=creerListeLiaison(R);
+	Liaison* Cour=L;
 	Noeud* a;
 	Noeud* b;
 
@@ -301,6 +380,14 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 		tmp_noeud = tmp_noeud->suiv;
 
 	}
+	
+	while(Cour){
+		
+		SVGline( &svg, Cour->x1 - minx, Cour->y1 - miny, Cour->x2 - minx, Cour->y2 - miny);
+		Cour=Cour->suiv;
+		
+	}
+	DetruireLiaison(L);
 
 	while( tmp_commo ) {
 
@@ -315,13 +402,15 @@ void afficheReseauSVG(Reseau *R, char* nomInstance)
 }
 	
 void min_max_r(Reseau *R,double* minx,double* miny,double* maxx,double* maxy)
-{
-	CellNoeud* courant=R->noeuds;
+{	
+	
+	
 	*minx=100;
 	*miny=100;
 	*maxx=0;
 	*maxy=0;
-	while(courant->nd){
+	CellNoeud* courant=R->noeuds;
+	while(courant){
 		
 		if(courant->nd->x < *minx)
 			*minx=courant->nd->x;

@@ -47,16 +47,18 @@ int main(int argc,char* *argv){
 				printf("Reconstitution du réseau par liste chainée.\n");
 				R=reconstitueReseauListe(&C);
 				ecrireReseauTxt(R,f1);
+				afficheReseauSVG( R, "aff_reseauL" );
 				break;
 
 			case 2:
 				printf("Reconstitution du réseau par table de hachage\n");
 				R=recreeReseauHachage(&C);
 				ecrireReseauTxt(R,f1);
+				afficheReseauSVG( R, "aff_reseauH" );
 				break;
 			case 3:
 				
-				printf("Methode à definir\n");
+				printf("Reconstitution du réseau en utilisant les arbres\n");
 				
 				break;
 				

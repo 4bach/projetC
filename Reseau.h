@@ -32,6 +32,18 @@ typedef struct {
     CellCommodite *commodites;      /* Liste des commodites a relier */
 } Reseau;
 
+/*Une Liaison*/
+typedef struct liaison{
+	int num1;
+	double x1;
+	double y1;
+	int num2;
+	double x2;
+	double y2;
+	struct liaison* suiv;
+	
+}Liaison;
+
 Noeud* rechercheCreeNoeudListe(Reseau *R, double x, double y);
 Reseau* reconstitueReseauListe(Chaines *C);
 void ecrireReseauTxt(Reseau *R, FILE *f);
@@ -45,7 +57,10 @@ Reseau* intialiseReseau() ;
 int comptenoeud(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
 void afficheReseau( Reseau* R );
+int RechercheLiaison(Liaison* L,int n1, int n2);
+Liaison* creerLiaison(int n1,double x1,double y1, int n2,double x2,double y2);
+Liaison* creerListeLiaison(Reseau*R);
 void min_max_r(Reseau* R,double* minx,double* miny,double* maxx,double* maxy);
-
+void DetruireLiaison(Liaison*L);
 #endif
 

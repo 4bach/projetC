@@ -1,5 +1,5 @@
 ﻿GCC_FLAGS = -Wall -lm
-all: Chainmain ReconstitueReseau mainHachageTest
+all: Chainmain ReconstitueReseau mainHachageTest comparaison_main
 
 entree_sortie.o	: entree_sortie.c
 	gcc $(GCC_FLAGS) -c entree_sortie.c
@@ -37,8 +37,12 @@ ReconstitueReseau	: ReconstitueReseau.o Reseau.o Chaine.o entree_sortie.o SVGwri
 mainHachageTest	: mainHachageTest.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o Arbres.o
 	gcc $(GCC_FLAGS) -o mainHachageTest mainHachageTest.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o Arbres.o
 
+comparaison_main : comparaison_main.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o Arbres.o
+	gcc $(GCC_FLAGS) -o comparaison_main comparaison_main.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o Arbres.o
+
+
 clean	:
-	rm -f entree_sortie.o Chaine.o  Chainmain.o Chainmain SVGwriter.o Hachage.o mainHachageTest mainHachageTest.o
+	rm -f entree_sortie.o Chaine.o  Chainmain.o Chainmain SVGwriter.o Hachage.o mainHachageTest mainHachageTest.o comparaison_main comparaison_main.o
 
 
 

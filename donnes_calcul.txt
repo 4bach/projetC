@@ -1,0 +1,81 @@
+Test pour le fichier 00014_burma.cha
+Temps de calcul de reconstitution par Liste Chainée 0.000012
+Temps de calcul de reconstitution par table de hachage 0.000012
+
+
+Test pour le fichier 00048_att.cha
+Temps de calcul de reconstitution par Liste Chainée 0.000051
+Temps de calcul de reconstitution par table de hachage 0.000042
+
+
+Test pour le fichier 00052_berlin.cha
+Temps de calcul de reconstitution par Liste Chainée 0.000069
+Temps de calcul de reconstitution par table de hachage 0.000055
+
+
+Test pour le fichier 00076_eil.cha
+Temps de calcul de reconstitution par Liste Chainée 0.000088
+Temps de calcul de reconstitution par table de hachage 0.000060
+
+
+Test pour le fichier 00144_pr.cha
+Temps de calcul de reconstitution par Liste Chainée 0.000264
+Temps de calcul de reconstitution par table de hachage 0.000134
+
+
+Test pour le fichier 00150_ch.cha
+Temps de calcul de reconstitution par Liste Chainée 0.000433
+Temps de calcul de reconstitution par table de hachage 0.000199
+
+
+Test pour le fichier 00280_a.cha
+Temps de calcul de reconstitution par Liste Chainée 0.001365
+Temps de calcul de reconstitution par table de hachage 0.000446
+
+
+Test pour le fichier 00417_fl.cha
+Temps de calcul de reconstitution par Liste Chainée 0.004692
+Temps de calcul de reconstitution par table de hachage 0.001053
+
+
+Test pour le fichier 00493_d.cha
+Temps de calcul de reconstitution par Liste Chainée 0.014960
+Temps de calcul de reconstitution par table de hachage 0.002491
+
+
+
+Test pour le fichier 00575_rat.cha
+Temps de calcul de reconstitution par Liste Chainée 0.016463
+Temps de calcul de reconstitution par table de hachage 0.002688
+
+
+Test pour le fichier 00783_rat.cha
+Temps de calcul de reconstitution par Liste Chainée 0.042567
+Temps de calcul de reconstitution par table de hachage 0.005882
+
+
+Test pour le fichier 01400_fl.cha
+Temps de calcul de reconstitution par Liste Chainée 0.146085
+Temps de calcul de reconstitution par table de hachage 0.015725
+
+
+Test pour le fichier 02392_pr.cha
+Temps de calcul de reconstitution par Liste Chainée 0.377410
+Temps de calcul de reconstitution par table de hachage 0.037437
+
+
+Test pour le fichier 03795_fl.cha
+Temps de calcul de reconstitution par Liste Chainée 1.019155
+Temps de calcul de reconstitution par table de hachage 0.124163
+
+
+Test pour le fichier 04461_fnl.cha
+Temps de calcul de reconstitution par Liste Chainée 2.385198
+Temps de calcul de reconstitution par table de hachage 0.293468
+
+
+Test pour le fichier 05934_rl.cha
+Temps de calcul de reconstitution par Liste Chainée 4.070724
+Temps de calcul de reconstitution par table de hachage 0.574087
+
+
