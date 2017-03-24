@@ -1,0 +1,187 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include "Hachage.h"
+#include "Chaine.h"
+#include "Reseau.h"
+#include "entree_sortie.h"
+#include "Arbre.h"
+
+
+
+void chaineCoordMinMax(Chaines* C, double* minx, double* miny, double* maxx, double* maxy)
+{
+	CellChaine* courant=C->chaines;
+	CellPoint* cpoint=NULL;
+
+	*minx=100;
+	*miny=100;
+	*maxx=0;
+	*maxy=0;
+
+	while(courant){
+		
+		cpoint=courant->points;
+		while(cpoint){
+			if(cpoint->x < *minx)
+				*minx=cpoint->x;
+			if(cpoint->y < *miny)
+				*miny=cpoint->y;
+			if(cpoint->x > *maxx)
+				*maxx=cpoint->x;
+			if(cpoint->y > *maxy)
+				*maxy=cpoint->y;
+			cpoint=cpoint->suiv;
+		}
+		courant=courant->suiv;
+	}
+}
+
+ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY)
+{
+	ArbreQuat* arbreQuat = ( ArbreQuat* )malloc( sizeof( ArbreQuat ) );
+	arbreQuat->xc = xc;
+	arbreQuat->yc = yc;
+	arbreQuat->coteX = coteX;
+	arbreQuat->coteY = coteY;
+	arbreQuat->noeud = NULL;
+	arbreQuat->so = NULL;
+	arbreQuat->se = NULL;
+	arbreQuat->no = NULL;
+	arbreQuat->ne = NULL;
+	return arbreQuat;
+}
+
+ArbreQuat* orientationArbre( double x, double y, ArbreQuat* a )
+{
+	
+	if( ( x > a->xc ) && ( y > a->yc ) ) {
+			return  a->ne;
+		}
+		//SUD EST
+		else if ( ( x > a->xc ) && ( y < a->yc ) ) {
+			return a->se;
+		}
+		//SUD OUEST
+		else if ( ( x < a->xc ) && ( y < a->yc ) ) {
+			return a->so;
+		}
+		//NORD OUEST 
+		else if ( ( x < a->xc ) && ( y > a->yc ) ) {
+			return a->no;
+		}
+
+}
+
+ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent)
+{
+	
+	if( !a ) {
+		printf( "3 2 2\n" );
+		int coteX = parent->coteX/2;
+		int coteY = parent->coteY/2;
+		int yc, xc;
+
+
+		//NORD EST
+		if( ( n->x > parent->xc ) && ( n->y > parent->yc ) ) {
+			yc = parent->yc + (1/2)*(coteY - parent->yc);
+			xc = parent->xc + (1/2)*(coteX - parent->xc);
+			a = creerArbreQuat( xc, yc, coteX, coteY );
+			parent->ne = a;
+			parent->ne->noeud = n;
+		}
+		//SUD EST
+		else if ( ( n->x > parent->xc ) && ( n->y < parent->yc ) ) {
+			yc = parent->yc - (1/2)*(coteY - parent->yc);
+			xc = parent->xc + (1/2)*(coteX - parent->xc);
+			a = creerArbreQuat( xc, yc, coteX, coteY );
+			parent->se = a;
+			parent->se->noeud = n;
+		}
+		//SUD OUEST
+		else if ( ( n->x < parent->xc ) && ( n->y < parent->yc ) ) {
+			yc = parent->yc - (1/2)*(coteY - parent->yc);
+			xc = parent->xc - (1/2)*(coteX - parent->xc);
+			a = creerArbreQuat( xc, yc, coteX, coteY );
+			parent->so = a;
+			parent->so->noeud = n;
+		}
+		//NORD OUEST 
+		else if ( ( n->x < parent->xc ) && ( n->y > parent->yc ) ) {
+			yc = parent->yc + (1/2)*(coteY - parent->yc);
+			xc = parent->xc - (1/2)*(coteX - parent->xc);
+			a = creerArbreQuat( xc, yc, coteX, coteY );
+			parent->no = a;
+			parent->no->noeud = n;
+		}
+
+		return a;
+
+	}
+	else if( a->noeud ) {
+		printf( "3 2 3\n" );
+		//REPOSITIONNEMENT DU NOEUD EXISTANT
+	
+		orientationArbre( a->noeud->x, a->noeud->y, a );
+		insererNoeudArbre( a->noeud, orient, a );
+		printf( "3 2 3 1\n" );
+		//POISIOTNNEMENT DU NOEUD N
+		orient = orientationArbre( n->x, n->y, a );
+		orient = insererNoeudArbre( n, orient, a );
+		
+		//NORD EST
+		a->noeud = NULL;
+	}
+	//A PRECISER(CEST JUSTE UNE COPIE DE CELUI DE DESSUS)
+	else if( !a->noeud && a ) {
+		printf( "3 2 4\n" );
+		ArbreQuat* orient;
+		orient = orientationArbre( n->x, n->y, a );
+		orient = insererNoeudArbre( n, orient, a );
+		
+	}
+	return a;
+}
+
+Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat* parent)
+{
+	Noeud* n;
+	if( *aptr == NULL ) {
+		printf( "3 1\n" );
+		n = creerNoeud( R, pt->x, pt->y );
+		*aptr = insererNoeudArbre( n, *aptr, parent );
+		
+		CellNoeud* Cl = creerCellNoeud( n );
+		Cl->suiv=R->noeuds;
+		R->noeuds=Cl;
+
+		return n;
+	}
+	else if( (*aptr)->noeud != NULL ) {
+		
+		if( ( (*aptr)->noeud->x == pt->x ) && ( (*aptr)->noeud->y == pt->y ) ) {
+			printf("test vrai\n");
+			return (*aptr)->noeud;
+		}
+		printf( "3 2\n" );
+		n = creerNoeud( R, pt->x, pt->y );
+		parent = insererNoeudArbre( n, *aptr, parent );
+		printf( "3 2 1\n" );
+
+		CellNoeud* Cl = creerCellNoeud( n );
+		Cl->suiv=R->noeuds;
+		R->noeuds=Cl;
+
+		return n;
+	}
+	else if ( !(*aptr)->noeud && (*aptr) ){
+		printf( "3 3\n" );
+
+		ArbreQuat* orient = orientationArbre( pt->x, pt->y, (*aptr) );
+		n = chercherNoeudArbre( pt, R, &orient, (*aptr));
+		
+	}
+	return n;
+}

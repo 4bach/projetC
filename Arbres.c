@@ -38,6 +38,20 @@ void chaineCoordMinMax(Chaines* C, double* minx, double* miny, double* maxx, dou
 	}
 }
 
+void afficheArbre( ArbreQuat* a ) 
+{
+	if( !a ) {
+		return;
+	}
+	if( a->noeud ) {
+		printf( "Noeud, X = %f, Y = %f \n", a->noeud->x, a->noeud->y );
+	}
+	afficheArbre( a->ne );
+	afficheArbre( a->se );
+	afficheArbre( a->no );
+	afficheArbre( a->no );
+}
+
 ArbreQuat* creerArbreQuat(double xc, double yc, double coteX, double coteY)
 {
 	ArbreQuat* arbreQuat = ( ArbreQuat* )malloc( sizeof( ArbreQuat ) );
@@ -120,68 +134,46 @@ ArbreQuat* insererNoeudArbre(Noeud* n, ArbreQuat* a, ArbreQuat* parent)
 
 	}
 	else if( a->noeud ) {
-		//REPOSITIONNEMENT DU NOEUD EXISTANT
-		//NORD EST
-		//if( ( a->noeud->x == a->xc ) && ( a->noeud->y == a->yc ) ) return a;
+		
+
+		Noeud* n_tmp = a->noeud;
+		a->noeud = NULL;
 		printf( "3 2 1\n" );
-		if( ( a->noeud->x > a->xc ) && ( a->noeud->y > a->yc ) ) {
-			a->ne = insererNoeudArbre( a->noeud, a->ne ,a );
-			a->noeud = NULL;
-		}
-		//SUD EST
-		else if ( ( a->noeud->x > a->xc ) && ( a->noeud->y < a->yc ) ) {
-			a->se = insererNoeudArbre( a->noeud, a->se ,a );
-			a->noeud = NULL;
-		}
-		//SUD OUEST
-		else if ( ( a->noeud->x < a->xc ) && ( a->noeud->y < a->yc ) ) {
-			a->so = insererNoeudArbre( a->noeud, a->so ,a );
-			a->noeud = NULL;
-		}
-		//NORD OUEST 
-		else if ( ( a->noeud->x < a->xc ) && ( a->noeud->y > a->yc ) ) {
-			a->no = insererNoeudArbre( a->noeud, a->no ,a );
-			a->noeud = NULL;
-		}
-		//POISIOTNNEMENT DU NOEUD N
-		//NORD EST
+
+		a = insererNoeudArbre( n_tmp, a , parent );
+
 		printf( "3 2 2\n" );
-		if( ( n->x > a->xc ) && ( n->y > a->yc ) ) {
-			a->ne = insererNoeudArbre( n, a->ne ,a );
-		}
-		//SUD EST
-		else if ( ( n->x > a->xc ) && ( n->y < a->yc ) ) {
-			a->se = insererNoeudArbre( n, a->se ,a );
-		}
-		//SUD OUEST
-		else if ( ( n->x < a->xc ) && ( n->y < a->yc ) ) {
-			a->so = insererNoeudArbre( n, a->so ,a );
-		}
-		//NORD OUEST 
-		else if ( ( n->x < a->xc ) && ( n->y > a->yc ) ) {
-			a->no = insererNoeudArbre( n, a->no ,a );
-		}
+
+		a = insererNoeudArbre( n, a, parent );
+		return parent;
+		
+		
+		
 	}
 	//A PRECISER(CEST JUSTE UNE COPIE DE CELUI DE DESSUS)
 	else if( !a->noeud && a ) {
 		printf( "3 2 3\n" );
 		if( ( n->x > a->xc ) && ( n->y > a->yc ) ) {
-			a->ne = insererNoeudArbre( n, a->ne ,a );
+			a = insererNoeudArbre( n, a->ne ,a );
+
 		}
 		//SUD EST
 		else if ( ( n->x > a->xc ) && ( n->y < a->yc ) ) {
-			a->se = insererNoeudArbre( n, a->se ,a );
+			a = insererNoeudArbre( n, a->se ,a );
+
 		}
 		//SUD OUEST
 		else if ( ( n->x < a->xc ) && ( n->y < a->yc ) ) {
-			a->so = insererNoeudArbre( n, a->so ,a );
+			a = insererNoeudArbre( n, a->so ,a );
+
 		}
 		//NORD OUEST 
 		else if ( ( n->x < a->xc ) && ( n->y > a->yc ) ) {
-			a->no = insererNoeudArbre( n, a->no, a );
+			a = insererNoeudArbre( n, a->no, a );
+
 		}
 	}
-	return a;
+	return parent;
 }
 
 Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat* parent)
@@ -190,7 +182,7 @@ Noeud* chercherNoeudArbre(CellPoint* pt, Reseau* R, ArbreQuat** aptr, ArbreQuat*
 	if( *aptr == NULL ) {
 		printf( "3 1\n" );
 		n = creerNoeud( R, pt->x, pt->y );
-		*aptr = insererNoeudArbre( n, *aptr, parent );
+		parent = insererNoeudArbre( n, *aptr, parent );
 		
 		CellNoeud* Cl = creerCellNoeud( n );
 		Cl->suiv=R->noeuds;
@@ -263,8 +255,6 @@ Reseau* recreeReseauArbre(Chaines* C)
 		cpoint=courant->points;
 		courantco=(CellCommodite*)malloc(sizeof(CellCommodite));
 		while(cpoint){
-
-				enfant = orientationArbre(cpoint->x, cpoint->y, parent );
 				
 			if(bool==0){
 
@@ -304,6 +294,8 @@ Reseau* recreeReseauArbre(Chaines* C)
 		R->commodites=courantco;
 		courant=courant->suiv;
 	}
-	//afficheHachage( th );	
+	printf( "-----ARBRE----\n" );
+	afficheArbre( parent );	
+	printf( "-----FINARBRE----\n" );
 	return R;
 }

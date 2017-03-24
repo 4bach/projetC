@@ -187,6 +187,8 @@ int comptenoeud(Reseau *R){
 void ecrireReseauTxt(Reseau* R,FILE* f1 ){
 	CellCommodite* comcourant=R->commodites;
 	CellNoeud* ndcourant=R->noeuds;
+	CellNoeud* ndcourant_l=R->noeuds;
+	CellNoeud* voisincourant;
 	int cpt;
 	char str[10]="";
 	fprintf(f1,"NbNoeuds: ");
@@ -223,6 +225,25 @@ void ecrireReseauTxt(Reseau* R,FILE* f1 ){
 		ndcourant=ndcourant->suiv;
 		
 	}
+	fprintf(f1,"\n");
+	
+	while(ndcourant_l){
+	
+		
+		
+		voisincourant=ndcourant_l->nd->voisins;
+		while(voisincourant){
+			fprintf(f1,"l ");
+			sprintf(str,"%d",voisincourant->nd->num);
+			fprintf(f1,"%s ",str);
+			sprintf(str,"%d",ndcourant_l->nd->num);
+			fprintf(f1,"%s ",str);
+			fprintf(f1,"\n");
+			voisincourant=voisincourant->suiv;
+		}
+		ndcourant_l=ndcourant_l->suiv;
+	}
+	
 	fprintf(f1,"\n");
 	
 	while(comcourant){
