@@ -13,6 +13,9 @@ Chaine.o: Chaine.c
 Hachage.o: Hachage.c
 	gcc $(GCC_FLAGS) -c Hachage.c
 
+Arbres.o: Arbres.c
+	gcc $(GCC_FLAGS) -c Arbres.c
+
 Reseau.o: Reseau.c
 	gcc $(GCC_FLAGS) -c Reseau.c
 
@@ -28,11 +31,11 @@ mainHachageTest.o	: mainHachageTest.c
 Chainmain		: Chaine.o Chainmain.o entree_sortie.o SVGwriter.o
 	gcc $(GCC_FLAGS) -o Chainmain Chainmain.o Chaine.o entree_sortie.o SVGwriter.o
 
-ReconstitueReseau	: ReconstitueReseau.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o
+ReconstitueReseau	: ReconstitueReseau.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o 
 	gcc $(GCC_FLAGS) -o ReconstitueReseau ReconstitueReseau.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o
 
-mainHachageTest	: mainHachageTest.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o
-	gcc $(GCC_FLAGS) -o mainHachageTest mainHachageTest.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o
+mainHachageTest	: mainHachageTest.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o Arbres.o
+	gcc $(GCC_FLAGS) -o mainHachageTest mainHachageTest.o Reseau.o Chaine.o entree_sortie.o SVGwriter.o Hachage.o Arbres.o
 
 clean	:
 	rm -f entree_sortie.o Chaine.o  Chainmain.o Chainmain SVGwriter.o Hachage.o mainHachageTest mainHachageTest.o

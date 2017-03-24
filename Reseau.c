@@ -58,7 +58,25 @@ CellNoeud* creerCellNoeud( Noeud* nv )
 
 
 
+void afficheReseau( Reseau* R ){
+	CellNoeud* tmp_noeud = R->noeuds;
+	CellCommodite * tmp_commo = R->commodites;
+	Noeud* a;
+	Noeud* b;
+	while( tmp_noeud ) {
+		printf( "X = %f Y = %f\n", tmp_noeud->nd->x, tmp_noeud->nd->y );
+		tmp_noeud = tmp_noeud->suiv;
+	}
+	while( tmp_commo ) {
 
+		a = tmp_commo->extrA;
+		b = tmp_commo->extrB;
+
+		printf("coomodit : X: %f  Y:%f to X: %f  Y:%f\n", a->x, a->y, b->x, b->y);
+
+		tmp_commo = tmp_commo->suiv;
+	}
+}
 
  Noeud* rechercheCreeNoeudListe(Reseau* R,double x,double y){
  	if(R==NULL){

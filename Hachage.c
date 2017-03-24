@@ -148,49 +148,55 @@ Reseau* recreeReseauHachage(Chaines *C)
 {	
 	TableHachage* th = initTableHachage( TAILLE );
 	CellChaine* courant=C->chaines;
-
+	int bool = 0;
 	Reseau* R = intialiseReseau();
 	R->gamma=C->gamma;
 
 	CellCommodite* courantco=NULL;
 	CellPoint* cpoint=NULL;
-	Noeud * noeudCourantA = NULL;
-	Noeud * noeudCourantB = NULL;
+	Noeud* precedent=NULL;
+	Noeud * noeudCourant= NULL;
 
-	while( courant ) {
-
+	while(courant){
 		cpoint=courant->points;
-
-		while( cpoint->suiv ) {
-			
-			courantco=(CellCommodite*)malloc(sizeof(CellCommodite));
-
-			noeudCourantA = rechercheCreeNoeudHachage( R, th, cpoint->x,cpoint->y);
-			courantco->extrA = noeudCourantA;
-
-			noeudCourantB = rechercheCreeNoeudHachage( R, th, cpoint->suiv->x, cpoint->suiv->y );
-			courantco->extrB = noeudCourantB;
-
-			CellNoeud * cellPrecA = ( CellNoeud* )malloc( sizeof( CellNoeud ) );
-			cellPrecA->nd = noeudCourantB;
-			cellPrecA->suiv = noeudCourantA->voisins;
-			noeudCourantA->voisins = cellPrecA;
-
-			CellNoeud * cellPrecB = ( CellNoeud* )malloc( sizeof( CellNoeud ) );
-			cellPrecB->nd = noeudCourantA;
-			cellPrecB->suiv = noeudCourantB->voisins;
-			noeudCourantB->voisins = cellPrecB;
-					
-			courantco->suiv = R->commodites;
-			R->commodites = courantco;
-
-			cpoint = cpoint->suiv;
+		courantco=(CellCommodite*)malloc(sizeof(CellCommodite));
+		while(cpoint){
+			if(bool==0){
+				noeudCourant = rechercheCreeNoeudHachage( R, th, cpoint->x,cpoint->y);
+				courantco->extrA=noeudCourant;
+				bool++;
+			}
+			else{
+				noeudCourant = rechercheCreeNoeudHachage( R, th, cpoint->x,cpoint->y);
+				CellNoeud * cellPrec = (CellNoeud *) malloc(sizeof(CellNoeud));
+				cellPrec->nd = precedent;
+				cellPrec->suiv = noeudCourant->voisins;
+				noeudCourant->voisins = cellPrec;
+				
+				CellNoeud * cellCour = (CellNoeud *) malloc(sizeof(CellNoeud));
+				cellCour->nd = noeudCourant;
+				cellCour->suiv = precedent->voisins;
+				precedent->voisins = cellCour;
+				
+				
+				if(cpoint->suiv==NULL){
+					courantco->extrB=noeudCourant;
+				}
+				
+			}
+			cpoint=cpoint->suiv;
+			precedent = noeudCourant;
 		}
-		courant = courant->suiv;
+		bool=0;
+		courantco->suiv=R->commodites;
+		R->commodites=courantco;
+		courant=courant->suiv;
 	}
-	
-	//afficheHachage( th );
+	//afficheHachage( th );	
 	return R;
+	
+	
+	
 }
 
 

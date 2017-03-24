@@ -44,6 +44,7 @@ CellNoeud* creerCellNoeud( Noeud* nv );
 Reseau* intialiseReseau() ;
 int comptenoeud(Reseau *R);
 void afficheReseauSVG(Reseau *R, char* nomInstance);
+void afficheReseau( Reseau* R );
 void min_max_r(Reseau* R,double* minx,double* miny,double* maxx,double* maxy);
 
 #endif

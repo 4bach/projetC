@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Hachage.h"
+#include "Arbre.h"
 
 int main(int argc,char* *argv)
 {
@@ -24,8 +25,9 @@ int main(int argc,char* *argv)
 	//TableHachage* th = creerTableHachage( &C );
 	//afficheHachage( th );
 	//Reseau* R = reconstitueReseauListe(&C);
-	
-	Reseau* R = recreeReseauHachage(&C);
+	//Reseau* R = recreeReseauHachage(&C);
+	Reseau* R = recreeReseauArbre(&C);
+	afficheReseau( R );
 	afficheReseauSVG( R, "aff_reseau" );
 
 
